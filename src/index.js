@@ -1,9 +1,12 @@
+const axios = require("axios");
+
 class App {
-    constructor(){
+    constructor() {
         this.buttonCreate = document.getElementById("btn_create");
         this.title = document.getElementById("input_title");
         this.content = document.getElementById("input_content");
 
+        this.getScraps(this);
         this.registerEvents();
     }
 
@@ -11,28 +14,69 @@ class App {
         this.buttonCreate.onclick = (event) => this.createCard(event);
     }
 
-    createCard(event) {
-        event.preventDefault();
+    getScraps(app) {
+        axios.get('http://localhost:3333/scraps')
+            .then(function (response) {
+                app.recoveryScraps(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .finally(function () {
+            });
+    }
 
-        if(this.title.value && this.content.value) {
-            const html = this.cardLayout(this.title.value, this.content.value);
+    recoveryScraps(data) {
+        for(item of data) {
+            const html = this.cardLayout(item.id, item.title, item.content);
 
             this.insertHtml(html);
-
-            this.clearForm();
 
             document.querySelectorAll('.delete-card').forEach(item => {
                 item.onclick = event => this.deleteCard(event);
             });
+        }
+    }
 
+    createCard(event) {
+        event.preventDefault();
+
+        if(this.title.value && this.content.value) {
+            this.sendToServer(this);
         } else {
             alert("Preencha os campos!");
         }
     }
 
-    cardLayout(title, content) {
+    sendToServer(app) {
+        axios.post(`http://localhost:3333/scraps`, {
+                title: this.title.value,
+                content: this.content.value
+            })
+            .then(function (response) {
+                const {id, title, content} = response.data;
+                let html = app.cardLayout(id, title, content);
+
+                app.insertHtml(html);
+
+                app.clearForm();
+
+                document.querySelectorAll('.delete-card').forEach(item => {
+                    item.onclick = event => app.deleteCard(event);
+                });
+
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert("Ops! Tente novamente mais tarde.");
+            })
+            .finally(function () {
+            });
+    }
+
+    cardLayout(id, title, content) {
         const html = `
-            <div class="col mt-5">
+            <div class="col mt-5" scrap="${id}">
                 <div class="card">
                     <div class="card-body">
                     <h5 class="card-title">${title}</h5>
@@ -55,7 +99,19 @@ class App {
         this.content.value = "";
     }
 
-    deleteCard = (event) => event.path[3].remove();
+    deleteCard = (event) => {
+        const id = event.path[3].getAttribute('scrap');
+        
+        axios.delete(`http://localhost:3333/scraps/${id}`)
+            .then(function (response) {
+                event.path[3].remove();
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .finally(function () {
+            });
+    };
 
 }
 
