@@ -1,5 +1,5 @@
 const  path = require('path');
-const dotenv = require('dotenv-webpack');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: ['@babel/polyfill', path.resolve(__dirname, 'src', 'index.js')],
@@ -11,7 +11,12 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
   },
-  plugins:[new dotenv()],
+  plugins:[
+    new Dotenv({
+      path: './.env', // Path to .env file (this is the default)
+      safe: true // load .env.example (defaults to "false" which does not use dotenv-safe)
+    }),
+  ],
   module: {
     rules: [
       {
