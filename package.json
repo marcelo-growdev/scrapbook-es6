@@ -22,7 +22,8 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
-    "dotenv-webpack": "^1.7.0",
-    "axios": "^0.19.0"
+    "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "dotenv-webpack": "^1.7.0"
   }
 }

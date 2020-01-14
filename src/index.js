@@ -52,7 +52,8 @@ class App {
     getConfigHeader() {
       return {
         headers: {
-          'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+          'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
+          'Access-Control-Allow-Origin': '*'
         }
       }
     }
