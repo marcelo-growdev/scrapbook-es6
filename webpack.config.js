@@ -13,7 +13,7 @@ module.exports = {
   },
   plugins:[
     new Dotenv({
-      // path: path.resolve(__dirname, '.env'),
+      path: path.resolve(__dirname, './.env')
       // safe: false // load .env.example (defaults to "false" which does not use dotenv-safe)
     }),
   ],
