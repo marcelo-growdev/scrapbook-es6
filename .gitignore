@@ -1,4 +1,2 @@
 .env
-public/bundle.js
-public/main.js
 node_modules/
