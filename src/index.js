@@ -51,14 +51,9 @@ class App {
 
     getConfigHeader() {
       return {
-        mode: 'no-cors',
         headers: {
           'Authorization': 'Bearer ' + sessionStorage.getItem('token'),
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json',
-        },
-        withCredentials: true,
-        credentials: 'same-origin',
+        }
       }
     }
 
